@@ -1,0 +1,4 @@
+interface:
+  display_name: "Team Agent Coordinator"
+  short_description: "Coordinate repo agents with MCP claims."
+  default_prompt: "Use this skill to join a shared repo coordination workspace before editing files."
