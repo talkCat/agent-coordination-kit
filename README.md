@@ -14,7 +14,8 @@ V1 scope:
 ## Contents
 
 - `team_coordinator_mcp/core.py`: event-sourced state machine, lock, claims, review, handoff, Markdown render.
-- `team_coordinator_mcp/server.py`: dependency-free stdio MCP server.
+- `team_coordinator_mcp/server_sdk.py`: stdio MCP server based on the official Python MCP SDK.
+- `team_coordinator_mcp/server.py`: legacy dependency-free stdio server kept for local fallback tests.
 - `team_coordinator_mcp/cli.py`: local smoke-test CLI.
 - `skills/team-agent-coordinator/SKILL.md`: client behavior skill.
 - `tests/`: stdlib `unittest` coverage.
@@ -23,10 +24,10 @@ V1 scope:
 
 ```bash
 cd /home/dev/bxc/longflow_combine/agent-coordination-kit
-python3 -m pip install -e .
+uv sync
 ```
 
-The implementation has no runtime dependencies beyond Python stdlib.
+The MCP server uses the official Python `mcp` SDK and runs from the project `.venv`.
 
 ## MCP Server
 
@@ -35,7 +36,7 @@ Example MCP command:
 ```bash
 ACK_WORKSPACE_ROOT=/home/dev/bxc/longflow_combine \
 ACK_DOCS_DIR=/home/dev/bxc/longflow_combine/plan \
-python3 -m team_coordinator_mcp.server
+.venv/bin/python -m team_coordinator_mcp.server_sdk
 ```
 
 Client configuration can point to the same command. The server exposes:
@@ -60,9 +61,9 @@ Client configuration can point to the same command. The server exposes:
 
 ```bash
 cd /home/dev/bxc/longflow_combine/agent-coordination-kit
-python3 -m team_coordinator_mcp.cli --root /tmp/ack-demo init --goal "Demo"
-python3 -m team_coordinator_mcp.cli --root /tmp/ack-demo context
-python3 -m team_coordinator_mcp.cli --root /tmp/ack-demo render
+.venv/bin/python -m team_coordinator_mcp.cli --root /tmp/ack-demo init --goal "Demo"
+.venv/bin/python -m team_coordinator_mcp.cli --root /tmp/ack-demo context
+.venv/bin/python -m team_coordinator_mcp.cli --root /tmp/ack-demo render
 ```
 
 ## Skill

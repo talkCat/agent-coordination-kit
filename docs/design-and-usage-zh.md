@@ -58,7 +58,9 @@ MCP server 是唯一具备写入协作状态权限的组件，负责：
 
 - `team_coordinator_mcp/core.py`
 - `team_coordinator_mcp/tools.py`
-- `team_coordinator_mcp/server.py`
+- `team_coordinator_mcp/server_sdk.py`
+
+`team_coordinator_mcp/server.py` 是早期手写 stdio server，仅作为本地 fallback 保留。正式接入 Codex 时使用基于官方 Python MCP SDK 的 `server_sdk.py`。
 
 ### 3.2 Skill
 
@@ -482,14 +484,14 @@ cd /home/dev/bxc/longflow_combine/agent-coordination-kit
 开发态安装：
 
 ```bash
-python3 -m pip install -e .
+uv sync
 ```
 
-不安装也可以通过模块方式直接运行：
+MCP server 使用官方 Python `mcp` SDK，运行在本项目 `.venv` 中。CLI 也建议使用 `.venv` 里的 Python：
 
 ```bash
-python3 -m team_coordinator_mcp.cli --help
-python3 -m team_coordinator_mcp.server
+.venv/bin/python -m team_coordinator_mcp.cli --help
+.venv/bin/python -m team_coordinator_mcp.server_sdk
 ```
 
 ## 8. MCP Server 使用方式
@@ -501,7 +503,7 @@ cd /home/dev/bxc/longflow_combine/agent-coordination-kit
 
 ACK_WORKSPACE_ROOT=/home/dev/bxc/longflow_combine \
 ACK_DOCS_DIR=/home/dev/bxc/longflow_combine/plan \
-python3 -m team_coordinator_mcp.server
+.venv/bin/python -m team_coordinator_mcp.server_sdk
 ```
 
 MCP client 配置中 command 可以指向：
@@ -515,7 +517,7 @@ args：
 ```json
 [
   "-m",
-  "team_coordinator_mcp.server"
+  "team_coordinator_mcp.server_sdk"
 ]
 ```
 
@@ -528,14 +530,14 @@ env：
 }
 ```
 
-如果 client 不支持设置工作目录，建议先执行：
+如果 client 不支持设置工作目录，建议使用绝对路径：
 
 ```bash
-cd /home/dev/bxc/longflow_combine/agent-coordination-kit
-python3 -m pip install -e .
+/home/dev/bxc/longflow_combine/agent-coordination-kit/.venv/bin/python \
+  -m team_coordinator_mcp.server_sdk
 ```
 
-这样任意目录都可以通过 `python3 -m team_coordinator_mcp.server` 启动。
+这样不依赖当前 shell 的 Python 包路径。
 
 ## 9. CLI 使用方式
 
@@ -544,7 +546,7 @@ CLI 用于本地调试和 smoke test。
 初始化：
 
 ```bash
-python3 -m team_coordinator_mcp.cli \
+.venv/bin/python -m team_coordinator_mcp.cli \
   --root /tmp/ack-demo \
   --docs-dir /tmp/ack-demo/docs \
   init \
@@ -554,7 +556,7 @@ python3 -m team_coordinator_mcp.cli \
 查看上下文：
 
 ```bash
-python3 -m team_coordinator_mcp.cli \
+.venv/bin/python -m team_coordinator_mcp.cli \
   --root /tmp/ack-demo \
   context
 ```
@@ -562,7 +564,7 @@ python3 -m team_coordinator_mcp.cli \
 渲染 Markdown：
 
 ```bash
-python3 -m team_coordinator_mcp.cli \
+.venv/bin/python -m team_coordinator_mcp.cli \
   --root /tmp/ack-demo \
   --docs-dir /tmp/ack-demo/docs \
   render
@@ -571,7 +573,7 @@ python3 -m team_coordinator_mcp.cli \
 查看审计日志：
 
 ```bash
-python3 -m team_coordinator_mcp.cli \
+.venv/bin/python -m team_coordinator_mcp.cli \
   --root /tmp/ack-demo \
   audit
 ```
@@ -705,13 +707,13 @@ cd /home/dev/bxc/longflow_combine/agent-coordination-kit
 单元测试：
 
 ```bash
-python3 -m unittest discover -s tests -v
+.venv/bin/python -m unittest discover -s tests -v
 ```
 
 Python 编译检查：
 
 ```bash
-python3 -m py_compile team_coordinator_mcp/*.py
+.venv/bin/python -m py_compile team_coordinator_mcp/*.py
 ```
 
 Skill 校验：
@@ -728,18 +730,18 @@ tmp=$(mktemp -d)
 mkdir -p "$tmp/src"
 echo 'print(1)' > "$tmp/src/main.py"
 
-python3 -m team_coordinator_mcp.cli \
+.venv/bin/python -m team_coordinator_mcp.cli \
   --root "$tmp" \
   --docs-dir "$tmp/docs" \
   init \
   --goal Demo
 
-python3 -m team_coordinator_mcp.cli \
+.venv/bin/python -m team_coordinator_mcp.cli \
   --root "$tmp" \
   --docs-dir "$tmp/docs" \
   context
 
-python3 -m team_coordinator_mcp.cli \
+.venv/bin/python -m team_coordinator_mcp.cli \
   --root "$tmp" \
   --docs-dir "$tmp/docs" \
   render
@@ -762,7 +764,7 @@ rm -rf "$tmp"
 - decision 记录。
 - audit log。
 - Markdown 固定文件渲染、HTML 转义、非生成文件跳过。
-- dependency-free stdio MCP server。
+- 基于官方 Python `mcp` SDK 的 stdio MCP server。
 - CLI smoke test。
 - `team-agent-coordinator` Skill。
 
@@ -771,7 +773,7 @@ rm -rf "$tmp"
 - 单元测试 16 项通过。
 - Skill quick validate 通过。
 - CLI smoke test 通过。
-- MCP stdio `initialize`、`tools/list`、`tools/call` smoke test 通过。
+- MCP stdio `initialize`、`tools/list` smoke test 通过。
 
 ## 15. 后续演进建议
 

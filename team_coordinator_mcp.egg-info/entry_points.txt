@@ -1,0 +1,3 @@
+[console_scripts]
+team-coordinator = team_coordinator_mcp.cli:main
+team-coordinator-mcp = team_coordinator_mcp.server_sdk:main

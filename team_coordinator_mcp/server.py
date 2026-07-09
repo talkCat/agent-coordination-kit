@@ -13,6 +13,15 @@ from typing import Any, Dict, Optional
 from .tools import TeamCoordinatorTools
 
 
+def log_debug(message: str, **fields: Any) -> None:
+    log_path = os.environ.get("ACK_MCP_LOG")
+    if not log_path:
+        return
+    record = {"message": message, **fields}
+    with open(log_path, "a", encoding="utf-8") as fh:
+        fh.write(json.dumps(record, ensure_ascii=False, sort_keys=True) + "\n")
+
+
 def read_message() -> Optional[Dict[str, Any]]:
     headers = {}
     while True:
@@ -41,17 +50,21 @@ class MCPServer:
     def __init__(self):
         root = Path(os.environ.get("ACK_WORKSPACE_ROOT", ".")).resolve()
         docs = os.environ.get("ACK_DOCS_DIR")
+        log_debug("server_started", root=str(root), docs_dir=docs)
         self.tools = TeamCoordinatorTools(default_root=root, default_docs_dir=Path(docs).resolve() if docs else None)
 
     def handle(self, request: Dict[str, Any]) -> Optional[Dict[str, Any]]:
         method = request.get("method")
         request_id = request.get("id")
+        log_debug("request", method=method, id=request_id)
         if method and method.startswith("notifications/"):
             return None
         try:
             if method == "initialize":
+                params = request.get("params") or {}
+                requested_version = params.get("protocolVersion")
                 result = {
-                    "protocolVersion": "2024-11-05",
+                    "protocolVersion": requested_version or "2024-11-05",
                     "capabilities": {"tools": {}},
                     "serverInfo": {"name": "team-coordinator-mcp", "version": "0.1.0"},
                 }

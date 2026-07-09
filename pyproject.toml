@@ -6,11 +6,18 @@ build-backend = "setuptools.build_meta"
 name = "team-coordinator-mcp"
 version = "0.1.0"
 description = "Repo-local Agent Coordination Kit MCP server"
-requires-python = ">=3.8"
+requires-python = ">=3.10"
+dependencies = [
+    "mcp>=1.28.1",
+]
 
 [project.scripts]
 team-coordinator = "team_coordinator_mcp.cli:main"
-team-coordinator-mcp = "team_coordinator_mcp.server:main"
+team-coordinator-mcp = "team_coordinator_mcp.server_sdk:main"
+
+[[tool.uv.index]]
+url = "https://pypi.tuna.tsinghua.edu.cn/simple"
+default = true
 
 [tool.setuptools]
 packages = ["team_coordinator_mcp"]

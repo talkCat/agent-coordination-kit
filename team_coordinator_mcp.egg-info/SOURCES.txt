@@ -1,0 +1,17 @@
+README.md
+pyproject.toml
+team_coordinator_mcp/__init__.py
+team_coordinator_mcp/cli.py
+team_coordinator_mcp/core.py
+team_coordinator_mcp/server.py
+team_coordinator_mcp/server_sdk.py
+team_coordinator_mcp/tools.py
+team_coordinator_mcp.egg-info/PKG-INFO
+team_coordinator_mcp.egg-info/SOURCES.txt
+team_coordinator_mcp.egg-info/dependency_links.txt
+team_coordinator_mcp.egg-info/entry_points.txt
+team_coordinator_mcp.egg-info/requires.txt
+team_coordinator_mcp.egg-info/top_level.txt
+tests/test_coordinator_core.py
+tests/test_server_sdk.py
+tests/test_tools.py

@@ -1,0 +1,6 @@
+Metadata-Version: 2.4
+Name: team-coordinator-mcp
+Version: 0.1.0
+Summary: Repo-local Agent Coordination Kit MCP server
+Requires-Python: >=3.10
+Requires-Dist: mcp>=1.28.1
