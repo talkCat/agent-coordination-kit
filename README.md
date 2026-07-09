@@ -4,6 +4,8 @@ Generic repo-local coordination kit for multiple AI agents working in one shared
 
 中文设计方案和使用手册：[docs/design-and-usage-zh.md](docs/design-and-usage-zh.md)
 
+多窗口操作手册：[docs/multi-window-usage-zh.md](docs/multi-window-usage-zh.md)
+
 V1 scope:
 
 - single repo

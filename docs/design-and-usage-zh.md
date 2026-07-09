@@ -15,6 +15,8 @@
 
 当前 Langflow 同步任务可以作为验证场景，但该工具本身保持通用，不绑定 Langflow、前端或后端项目。
 
+多窗口协作的具体启动模板、`PROJECT_ROOT/RUN_ID/DOCS_DIR` 约定、换窗口接管流程，见独立手册：[multi-window-usage-zh.md](multi-window-usage-zh.md)。
+
 ## 2. V1 范围
 
 V1 明确收敛为单机、单工作区协作工具：
@@ -652,6 +654,8 @@ docs_dir: /home/dev/bxc/longflow_combine/plan
 - 如果希望生成 `AGENTS.md` 等固定文件到 `plan`，需先确认同名人工文件是否迁移或保留。
 
 ## 12. 推荐协作流程
+
+如果是多个对话窗口并行协作，先按 [多窗口使用手册](multi-window-usage-zh.md) 由协调窗口创建 `RUN_ID`，再让其他窗口复用同一个 `PROJECT_ROOT/RUN_ID/DOCS_DIR` 接入。
 
 ### 12.1 Coordinator 初始化
 

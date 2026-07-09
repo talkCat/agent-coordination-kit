@@ -11,6 +11,16 @@ Treat `team-coordinator-mcp` as the coordination authority. `events.jsonl` is th
 
 This skill is a behavior contract, not a safety boundary. If a rule matters, call the MCP tool that enforces it.
 
+## Window Bootstrap
+
+For a new chat window, ask for or use the coordinator-provided `PROJECT_ROOT`, `RUN_ID`, `DOCS_DIR`, `role`, and `scope` once at startup. Do not require the user to repeat them in every message.
+
+Use `RUN_ID` as the human coordination label for the current run. In V1, the MCP state is still rooted at `PROJECT_ROOT`; `RUN_ID` is mainly reflected by `DOCS_DIR`.
+
+If a role moves to a new window, register a new agent session instead of reusing the old agent identity. Inspect existing claims and handoffs before taking over.
+
+Do not use shell, Python scripts, or a local facade as a substitute for available `team-coordinator-mcp` tools.
+
 ## Start Workflow
 
 1. Call `get_context_bundle(role?, scope?)`, or read generated `AGENTS.md`, `TASK_BOARD.md`, `DECISIONS.md`, and `HANDOFF_LOG.md` when MCP is not connected.
